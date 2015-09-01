@@ -1,0 +1,50 @@
+apply plugin: 'java'
+apply plugin: 'application'
+
+sourceCompatibility = 1.8
+version = '1.0'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+    compile group: 'com.google.cloud.dataflow', name: 'google-cloud-dataflow-java-sdk-all', version: '0.4.150602'
+    compile 'com.google.cloud.dataflow:google-cloud-dataflow-java-sdk-all:0.4.150602'
+}
+
+mainClassName = 'com.example.dataflow.FilePump'
+
+run {
+
+    def environment = System.getProperty('environment')
+    if (!environment) {
+        environment = 'google'
+    }
+
+    if(environment == "local")
+    {
+        args    '--stagingLocation=/tmp/df',
+                '--schemaFile=/Users/davidq/Google Drive/Projects/dataflow/src/main/resources/sales_promo_line.schema',
+              //  '--input=/Users/davidq/Google Drive/Projects/dataflow/src/main/resources/promo_line.*',
+                //'--input=/Users/davidq/Google Drive/Projects/dataflow/src/main/resources/testfile.*',
+                '--input=/Users/davidq/Downloads/20141001_20141015Run/DWB_RTL_SL_RETRN_PRMTN_LI/testfile.txt',
+               //  '--schemaFile=gs://m_inputdata/DWB_RTL_SL_RETRN_PRMTN_LI/sales_promo_line.schema',
+                '--bqProject=morrisonsinsight',
+                '--bqDataSet=CRMInputData',
+                '--bqTableName=promolinetest2'
+    }
+        else if (environment == "google")
+    {
+    args '--project=morrisonsinsight',
+            '--stagingLocation=gs://m_inputdata/df',
+            '--runner=DataflowPipelineRunner',
+            '--input=gs://m_inputdata/DWB_RTL_SL_RETRN_PRMTN_LI/dwb_rtl_sl_retrn_prmtn_li.part_20141006.txt.tgz',
+           // '--schemaFile=gs://m_inputdata/DWB_RTL_SL_RETRN_PRMTN_LI/sales_promo_line.schema',
+            '--schemaFile=/Users/davidq/Google Drive/Projects/dataflow/src/main/resources/sales_promo_line.schema',
+            '--bqProject=morrisonsinsight',
+            '--bqDataSet=CRMInputData',
+            '--bqTableName=sales_promo_line_full2'
+    }
+}
