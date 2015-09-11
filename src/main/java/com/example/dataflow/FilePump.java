@@ -59,7 +59,6 @@ public class FilePump {
 
         DateFormat df = new SimpleDateFormat("YYYYMMdd");
         DateFormat dfGoogle = new SimpleDateFormat("YYYY-MM-dd hh:mm:ss");
-        TableSchema schemaData;
         Integer schemaDataSize = bqSchema.getFields().size();
 
 
@@ -92,7 +91,6 @@ public class FilePump {
                     }
                     c.output(record);
 
-
                 } catch (NumberFormatException e) {
 
                     recordBadrecord(fields);
@@ -117,32 +115,30 @@ public class FilePump {
     /** Create a TableRow ready for push into BQ */
     @SuppressWarnings("serial")
     static class CreateTableRow extends DoFn<Record, TableRow> {
-        Integer schemaDataSize;
-//        TableSchema schemaData = bqSchema;
-        String fieldName;
-        String dataField;
-
 
         @Override
         public void processElement(DoFn<Record, TableRow>.ProcessContext c)
                 throws Exception {
-            TableRow row = new TableRow();
 
-            LOG.info("Process table row");
+            Integer schemaDataSize = bqSchema.getFields().size();
+            TableSchema schemaData = bqSchema;
+            String fieldName = "";
+            String dataField = "";
+            TableRow row = new TableRow();
 
             if (schemaDataSize!=43) LOG.info("bqSchemaSize: " + schemaDataSize);
 
             for (int i=0; i<schemaDataSize; i++) {
                 try {
                     dataField = c.element().fields.get(i);
-                    fieldName = bqSchema.getFields().get(i).getName();
+                    fieldName = schemaData.getFields().get(i).getName();
+
+                    row.set(fieldName, dataField);
                 } catch (NullPointerException e) {
-                    fieldName = null;
                     LOG.info("Field name is null at position: "+ i + " error: " +e );
                 }
-
-                row.set(fieldName, dataField);
             }
+
             c.output(row);
 
         }
@@ -224,8 +220,8 @@ public class FilePump {
 		 * Set Worker configurations
 		 * Allow Autoscaling but set maximum to be 10 workers
 		 */
-        dataflowOptions.setAutoscalingAlgorithm(AutoscalingAlgorithmType.NONE);
-        dataflowOptions.setNumWorkers(1); //Number of workers
+        dataflowOptions.setAutoscalingAlgorithm(AutoscalingAlgorithmType.BASIC);
+        dataflowOptions.setMaxNumWorkers(7); //Number of workers
 
         Pipeline p = Pipeline.create(dataflowOptions);
 

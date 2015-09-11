@@ -20,16 +20,16 @@ run {
 
     def environment = System.getProperty('environment')
     if (!environment) {
-        environment = 'google'
+        environment = 'local'
     }
 
     if(environment == "local")
     {
         args    '--stagingLocation=/tmp/df',
                 '--schemaFile=/Users/davidq/Google Drive/Projects/dataflow/src/main/resources/sales_promo_line.schema',
-              //  '--input=/Users/davidq/Google Drive/Projects/dataflow/src/main/resources/promo_line.*',
+                '--input=/Users/davidq/Google Drive/Projects/dataflow/src/main/resources/promo_line.*',
                 //'--input=/Users/davidq/Google Drive/Projects/dataflow/src/main/resources/testfile.*',
-                '--input=/Users/davidq/Downloads/20141001_20141015Run/DWB_RTL_SL_RETRN_PRMTN_LI/testfile.txt',
+                //'--input=/Users/davidq/Downloads/20141001_20141015Run/DWB_RTL_SL_RETRN_PRMTN_LI/testfile.txt',
                //  '--schemaFile=gs://m_inputdata/DWB_RTL_SL_RETRN_PRMTN_LI/sales_promo_line.schema',
                 '--bqProject=morrisonsinsight',
                 '--bqDataSet=CRMInputData',
