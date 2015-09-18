@@ -23,11 +23,12 @@ package com.example.dataflow;
         import com.google.cloud.dataflow.sdk.options.DataflowPipelineWorkerPoolOptions.AutoscalingAlgorithmType;
         import com.google.cloud.dataflow.sdk.options.PipelineOptions;
         import com.google.cloud.dataflow.sdk.options.PipelineOptionsFactory;
-        import com.google.cloud.dataflow.sdk.runners.BlockingDataflowPipelineRunner;
         import com.google.cloud.dataflow.sdk.transforms.Aggregator;
         import com.google.cloud.dataflow.sdk.transforms.DoFn;
         import com.google.cloud.dataflow.sdk.transforms.ParDo;
         import com.google.cloud.dataflow.sdk.transforms.Sum;
+
+
 /**
  * Created by davidq on 20/08/15.
  */
@@ -37,6 +38,10 @@ public class FilePump {
 
 
     static class Record implements Serializable {
+        List<String> fields = new ArrayList<String>();
+    }
+
+    static class SchemaFields implements Serializable {
         List<String> fields = new ArrayList<String>();
     }
 
@@ -59,8 +64,13 @@ public class FilePump {
 
         DateFormat df = new SimpleDateFormat("YYYYMMdd");
         DateFormat dfGoogle = new SimpleDateFormat("YYYY-MM-dd hh:mm:ss");
-        Integer schemaDataSize = bqSchema.getFields().size();
+        Integer schemaDataSize = 0;
+        SchemaFields newSchema = null;
 
+        public CreateRecords (SchemaFields newSchema) {
+            this.newSchema = newSchema;
+            this.schemaDataSize = newSchema.fields.size();
+        }
 
         /** Here we are creating a global aggregator */
         @Override
@@ -116,22 +126,31 @@ public class FilePump {
     @SuppressWarnings("serial")
     static class CreateTableRow extends DoFn<Record, TableRow> {
 
+
+        Integer schemaDataSize = 0;
+        SchemaFields schemaData = null;
+
+        public CreateTableRow (SchemaFields schemaData) {
+            this.schemaData = schemaData;
+            this.schemaDataSize = schemaData.fields.size();
+        }
+
         @Override
         public void processElement(DoFn<Record, TableRow>.ProcessContext c)
                 throws Exception {
 
-            Integer schemaDataSize = bqSchema.getFields().size();
-            TableSchema schemaData = bqSchema;
             String fieldName = "";
             String dataField = "";
             TableRow row = new TableRow();
+
 
             if (schemaDataSize!=43) LOG.info("bqSchemaSize: " + schemaDataSize);
 
             for (int i=0; i<schemaDataSize; i++) {
                 try {
                     dataField = c.element().fields.get(i);
-                    fieldName = schemaData.getFields().get(i).getName();
+                    fieldName = schemaData.fields.get(i);
+                   // LOG.info("Field: "+ fieldName + " datafield: " +dataField );
 
                     row.set(fieldName, dataField);
                 } catch (NullPointerException e) {
@@ -149,7 +168,7 @@ public class FilePump {
     /** Define the schema to be used in BQ */
     public static TableSchema bqSchema;
 
-    public static TableSchema getSchema(Options options) {
+    public static TableSchema getSchema(Options options, SchemaFields fieldList) {
         BufferedReader brSchemaFile;
 
         try {
@@ -163,6 +182,7 @@ public class FilePump {
         String text = new String();
         List<TableFieldSchema> fields = new ArrayList<TableFieldSchema>();
 
+
         try {
             text = brSchemaFile.readLine();
         } catch (Exception e) {
@@ -173,6 +193,7 @@ public class FilePump {
         for (String fieldNameType : strArray) {
             String[] definition = fieldNameType.split(":");
             fields.add(new TableFieldSchema().setName(definition[0]).setType(definition[1]));
+            fieldList.fields.add(definition[0]);
         }
 
         return new TableSchema().setFields(fields);
@@ -225,8 +246,11 @@ public class FilePump {
 
         Pipeline p = Pipeline.create(dataflowOptions);
 
+        //Create field serialised object
+        SchemaFields fieldList = new SchemaFields();
 
-        bqSchema = getSchema(options); //Construct the schema locally
+        bqSchema = getSchema(options, fieldList); //Construct the schema locally and populate fieldlist
+
         LOG.info(bqSchema.toString());
 		/*
 		 * Do the main pipeline work
@@ -235,9 +259,9 @@ public class FilePump {
             p.apply(TextIO.Read.named("Reader")
                     .from(options.getInput())
                     .withCompressionType(TextIO.CompressionType.GZIP))
-                .apply(ParDo.of(new TokenizesMessage()))
-                    .apply(ParDo.of(new CreateRecords()))
-                    .apply(ParDo.of(new CreateTableRow()))
+                    .apply(ParDo.of(new TokenizesMessage()))
+                    .apply(ParDo.of(new CreateRecords(fieldList)))
+                    .apply(ParDo.of(new CreateTableRow(fieldList)))
                     .apply(BigQueryIO.Write
                             .to(options.getbqProject() + ":" + options.getbqDataSet() + "." + options.getbqTableName())
                             .withSchema(bqSchema)
