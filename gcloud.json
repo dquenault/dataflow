@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "morrisonsinsight",
+  "private_key_id": "92053c5e6ddde9d9443f3f971ade67c266f979d3",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCyYI+kGSAnqq/7\n3pLFwN1vIAEtwvI2FQVq/N0lIVyyBexnEz7tAcYfCAmLTrL8/zA6wuz79gW9CtF8\nP4vTr5GQl+i2B6BmJqMgHbvkdvJmt/AnpGxSMAPj0t1iExUr9KWNAvX048BGr2Np\nStrO3Rz73CxlJ5gaVEZKlOmtRCvx6agHclmXQUPBtLxsghPzyhU/FVqPEhdNJggQ\neTAjoOcHvDyNi9+4UgH2UKz+kvSh/sRAaNXlG77/oHoYLEbBHQ3RBpR+MSnNY0XS\n/rZNcIQ9ZX8Fne4nhclNry43AQ9bwozDq+AsrLJ19TnyeP/WofyDYFOCLT9Q1OSe\nubzeSNzJAgMBAAECggEAAdDYi7TYjIiZzrzC7h5AL0DhdNuapW88n+j+ABeRNgab\nsEPtMeuA139N3ViIfr7fgB6FeHN54Ww86KCwazqnRuJzqKJ9oQnpJnlLdSkeQr+z\n36vhAvZkcYXLodqI0g5PzToJhFFAbT0c4XtfnjtN77MxC/Jz0a3n/ymkS28LeOuw\nEOYQOjJ5oCrIvH7YFj85Ox7U6U6ao81dvYgy4tAfw/SdBjUdQzgeASW5ZKHVK6dq\n4uBG/xV7ZbSiOIeAYf8wACF8UhAMLX6sqznguvFUML52Pk6hYmJ1JqKtYQzQDkFN\ndk3vd3YE0cS5H8IE+gzsV3XGEe4pskjaXyNXtZf9FQKBgQD3HK6GLyR7tZyEBCh5\nebSDXUBU8WveLQ/BGDQ6+hys4l/rFYCnGYqneTUeF4LM0kXU9RLBAR301T3acDGH\nTSzqRIaj74GZqkKYktOqg6Mun+QxgHAwaP+BdyEVjHCLJmHUppAfegVVry+Fsvbf\n8qJO10ZEy2ov/6mLFT3kZjMwVQKBgQC4yv5nEDmWHmCs6TsDGpOiDwCzkpm9iXB9\nhQOuQ42Iz8hNh6NkPL1ays9k2q0EI/Wnq2sxZJzPQ2PrmpH958EcowcdriCjfRKb\nnbHTdbNGbhaT8sgQpSRSA4nb7b1BO4o01myrLJmBKbyL6R1I2RyNfptnq9UOnMbc\nD7TYWt3epQKBgQDWlVOANkPKIWTuxuWWxvbX9Aw/Nv3iiuLZXPlOFY79Gf8NFzkG\n4gkjcP+NSAFPd3EogkBs1Vl8GAiEPVTlF0FflW4NwZebJtx5vVaNBY6YmEQCMHQ7\ntZHajOZv3eqFCyl9Db6tdrpXM69ivIvg4MPNDud4KePmFm7V1fZO9eiRmQKBgFYP\nK2ViF/+CjDFauQHcCa8qX4BBoNm1PS8nmCw7B5oUcksxBPX0l5bF5sooUPUhrhD0\n8wngumqIDuu1Y5IksTmd7v1yj360C8tvKFa7dM8zC87A/U1LK1wKi9RhpobPrLCo\nv5kEP0T44/cgjGPVwMdglA026BVTDAWGRwmPX86FAoGBAIXK8Rmv2Eekux8xJjLF\nJV9qYERGPsJwEPb+o0uxM1RT2OARBaP1Rfvbj66xoXbSndPcqLfEPAKwOYLdzwoG\ngjK6IGl+0Lww0xH+hhOGQn/A//7sLrlOXCDaK024O/EUcpNeeaXgmRuu5imvxT+H\n4j3srj6mZ5VwGbc45usKIh65\n-----END PRIVATE KEY-----\n",
+  "client_email": "storage-access@morrisonsinsight.iam.gserviceaccount.com",
+  "client_id": "113818448050273322231",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://accounts.google.com/o/oauth2/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/storage-access%40morrisonsinsight.iam.gserviceaccount.com"
+}
